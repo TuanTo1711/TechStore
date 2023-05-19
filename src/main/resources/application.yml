@@ -6,7 +6,7 @@ server:
 
 spring:
   profiles:
-    active: ${SPRING_PROFILES_ACTIVE:local}
+    active: dev
   flyway:
     locations: classpath:db/migration
     baselineOnMigrate: true
@@ -16,12 +16,15 @@ spring:
     validateOnMigrate: true
 
 ---
+
 spring:
-  profiles: local
+  config:
+    activate:
+      on-profile: dev
   datasource:
     url: jdbc:sqlserver://localhost:1433;database=TechStore;encrypt=true;trustServerCertificate=true
     username: sa
-    password: 123
+    password: Rintuna2808
   jpa:
     database-platform: org.hibernate.dialect.SQLServer2012Dialect
     properties:
@@ -36,13 +39,16 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 ---
+
 spring:
-  profiles: docker
+  config:
+    activate:
+      on-profile: docker
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     url: jdbc:sqlserver://tech_store_db;database=TechStore
     username: sa
-    password: 123
+    password: Rintuna2808
   jpa:
     database-platform: org.hibernate.dialect.SQLServer2012Dialect
     properties:
