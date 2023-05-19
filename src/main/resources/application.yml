@@ -16,8 +16,11 @@ spring:
     validateOnMigrate: true
 
 ---
+
 spring:
-  profiles: local
+  config:
+    activate:
+      on-profile: local
   datasource:
     url: jdbc:sqlserver://localhost:1433;database=TechStore;encrypt=true;trustServerCertificate=true
     username: sa
@@ -36,8 +39,11 @@ spring:
         physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
 
 ---
+
 spring:
-  profiles: docker
+  config:
+    activate:
+      on-profile: docker
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
     url: jdbc:sqlserver://tech_store_db;database=TechStore
