@@ -12,8 +12,10 @@ spring:
     baselineOnMigrate: true
     sqlMigrationPrefix: V
     sqlMigrationSeparator: __
-    sqlMigrationSuffix: .sql
     validateOnMigrate: true
+    sql-migration-suffixes: .sql
+jwt:
+  secret: 51665468576D5A7134743777217A25432A462D4A614E645267556B586E327235
 
 ---
 
@@ -22,33 +24,25 @@ spring:
     activate:
       on-profile: local
   datasource:
-    url: jdbc:sqlserver://localhost:1433;database=TechStore;encrypt=true;trustServerCertificate=true
+    url: jdbc:sqlserver://localhost:1433;databaseName=tempdb;encrypt=true;trustServerCertificate=true
     username: sa
-    password: 123
+    password: PaSsWoRd123
   jpa:
-    database-platform: org.hibernate.dialect.SQLServer2012Dialect
+    database-platform: org.hibernate.dialect.SQLServerDialect
     properties:
-      hibernate:
-        format_sql: true
-        use_sql_comments: true
-        show-sql: true
-    generate-ddl: true
-    hibernate:
-      ddl-auto: validate
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl
-
+      hibernate.format_sql: true
+    show-sql: true
+    
 ---
-
 spring:
   config:
     activate:
       on-profile: docker
   datasource:
     driver-class-name: com.microsoft.sqlserver.jdbc.SQLServerDriver
-    url: jdbc:sqlserver://tech_store_db;database=TechStore
+    url: jdbc:sqlserver://tech_store_db;database=tempdb;encrypt=true;trustServerCertificate=true
     username: sa
-    password: 123
+    password: PaSsWoRd123
   jpa:
     database-platform: org.hibernate.dialect.SQLServer2012Dialect
     properties:
@@ -59,5 +53,3 @@ spring:
     generate-ddl: true
     hibernate:
       ddl-auto: validate
-      naming:
-        physical-strategy: org.hibernate.boot.model.naming.PhysicalNamingStrategyStandardImpl

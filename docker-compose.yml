@@ -1,11 +1,12 @@
 version: '3.8'
 services:
   mssql:
-    image: mcr.microsoft.com/mssql/server:2019-latest
+    image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: mssql_db
     environment:
       ACCEPT_EULA: Y
-      SA_PASSWORD: Rintuna2808
+      MSSQL_SA_PASSWORD: PaSsWoRd123
+      MSSQL_PID: web
     ports:
       - "1433:1433"
     volumes:
@@ -18,4 +19,3 @@ volumes:
 networks:
   app-network:
     driver: bridge
-
