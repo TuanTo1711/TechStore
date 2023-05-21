@@ -1,8 +1,22 @@
 version: '3.8'
 services:
+  tech-store:
+    build:
+      context: ./
+      dockerfile: Dockerfile
+    image: tech-store
+    container_name: tech-store
+    hostname: tech-store
+    ports:
+      - "4001:4001"
+    networks:
+      - app-network
+    environment:
+      - SERVER_PORT=4001
+      - SPRING_PROFILES_ACTIVE=docker
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
-    container_name: mssql_db
+    container_name: tech_store_db
     environment:
       ACCEPT_EULA: Y
       MSSQL_SA_PASSWORD: PaSsWoRd123
@@ -10,11 +24,11 @@ services:
     ports:
       - "1433:1433"
     volumes:
-      - mssql_db_volume:/var/opt/mssql
+      - tech_store_db_volume:/var/opt/tech_store_db
     networks:
       - app-network
 volumes:
-  mssql_db_volume:
+  tech_store_db_volume:
   app_volume:
 networks:
   app-network:
