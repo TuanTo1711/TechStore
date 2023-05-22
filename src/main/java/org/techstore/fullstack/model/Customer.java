@@ -96,6 +96,6 @@ public class Customer extends DateAudit implements UserDetails, Serializable {
 
     @Override
     public boolean isEnabled() {
-        return true;
+        return verification;
     }
 }

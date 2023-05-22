@@ -16,7 +16,7 @@ import java.util.Map;
 import java.util.function.Function;
 
 @Service
-public class JwtUtil {
+public class JwtTokenizer {
 
     private static final long JWT_TOKEN_VALIDITY = 5L * 60 * 60;
 
@@ -35,7 +35,7 @@ public class JwtUtil {
         Map<String, Object> claims = new HashMap<>();
         claims.put("email", userDetails.getUsername());
         claims.put("authorities", userDetails.getAuthorities());
-        return doGenerateToken(claims);
+        return doGenerateToken(claims, userDetails.getUsername());
     }
 
     public boolean validateToken(String token, UserDetails userDetails) {
@@ -66,9 +66,10 @@ public class JwtUtil {
         return expiration.before(new Date());
     }
 
-    private String doGenerateToken(Map<String, Object> claims) {
+    private String doGenerateToken(Map<String, Object> claims, String subject) {
         return Jwts.builder()
                 .setClaims(claims)
+                .setSubject(subject)
                 .setIssuedAt(new Date())
                 .setExpiration(new Date(System.currentTimeMillis() + JWT_TOKEN_VALIDITY * 1000))
                 .signWith(getSigningKey(), SignatureAlgorithm.HS256)

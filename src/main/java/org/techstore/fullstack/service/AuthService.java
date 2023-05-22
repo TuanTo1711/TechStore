@@ -9,7 +9,9 @@ public interface AuthService {
 
     SignUpResponse register(SignUpRequest request);
 
-    void confirmAccount(String token); // unfinished
+    void confirmAccount(String token);
 
     SignInResponse login(SignInRequest request);
+
+    void sendingConfirmEmail(String email, String token);
 }

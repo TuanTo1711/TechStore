@@ -13,8 +13,8 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Component;
 import org.springframework.web.filter.OncePerRequestFilter;
-import org.techstore.fullstack.service.AppUserService;
-import org.techstore.fullstack.util.JwtUtil;
+import org.techstore.fullstack.service.impl.UserDetailsServiceImpl;
+import org.techstore.fullstack.util.JwtTokenizer;
 
 import java.io.IOException;
 import java.util.Objects;
@@ -23,8 +23,8 @@ import java.util.Objects;
 @RequiredArgsConstructor
 public class JwtAuthFilter extends OncePerRequestFilter {
 
-    private final JwtUtil jwtUtil;
-    private final AppUserService userDetailsService;
+    private final JwtTokenizer jwtTokenizer;
+    private final UserDetailsServiceImpl userDetailsService;
 
     @Override
     protected void doFilterInternal(
@@ -40,11 +40,11 @@ public class JwtAuthFilter extends OncePerRequestFilter {
         }
 
         final String jwtToken = authHeader.substring(7);
-        final String email = jwtUtil.getEmailFromToken(jwtToken);
+        final String email = jwtTokenizer.getEmailFromToken(jwtToken);
 
         if (Objects.nonNull(email)) {
             UserDetails userDetails = userDetailsService.loadUserByUsername(email);
-            if (jwtUtil.validateToken(jwtToken, userDetails)) {
+            if (jwtTokenizer.validateToken(jwtToken, userDetails)) {
                 Authentication auth = new UsernamePasswordAuthenticationToken(
                         userDetails,
                         null,

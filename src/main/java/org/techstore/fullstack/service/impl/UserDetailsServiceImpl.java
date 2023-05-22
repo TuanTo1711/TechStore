@@ -1,4 +1,4 @@
-package org.techstore.fullstack.service;
+package org.techstore.fullstack.service.impl;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -9,7 +9,7 @@ import org.techstore.fullstack.repository.CustomerRepository;
 
 @Service
 @RequiredArgsConstructor
-public class AppUserService implements UserDetailsService {
+public class UserDetailsServiceImpl implements UserDetailsService {
 
     private final CustomerRepository customerRepository;
 

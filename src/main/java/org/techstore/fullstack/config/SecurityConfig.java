@@ -27,6 +27,8 @@ public class SecurityConfig {
                 .authorizeHttpRequests()
                 .requestMatchers("api/v*/auth/**")
                 .permitAll()
+                .anyRequest()
+                .authenticated()
                 .and()
                 .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
                 .and()

@@ -6,14 +6,29 @@ services:
       dockerfile: Dockerfile
     image: tech-store
     container_name: tech-store
+    depends_on:
+      - mail-dev
+      - mssql
     hostname: tech-store
     ports:
       - "4001:4001"
     networks:
       - app-network
     environment:
+      - MAIL_HOST=mail-dev
       - SERVER_PORT=4001
       - SPRING_PROFILES_ACTIVE=docker
+
+  mail-dev:
+    image: maildev/maildev
+    hostname: mail-dev
+    container_name: mail-dev
+    ports:
+      - "1080:1080"
+      - "1025:1025"
+    networks:
+      - mail-network
+
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
     container_name: tech_store_db
@@ -29,7 +44,10 @@ services:
       - app-network
 volumes:
   tech_store_db_volume:
+  
   app_volume:
 networks:
   app-network:
+    driver: bridge
+  mail-network:
     driver: bridge

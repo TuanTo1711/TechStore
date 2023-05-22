@@ -17,43 +17,54 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(RunTimeExceptionPlaceholder.class)
     public ResponseEntity<ErrorResponse> handleException(RunTimeExceptionPlaceholder ex) {
-        var errorResponseResponse = ErrorResponse.builder()
+        var errorResponse = ErrorResponse.builder()
                 .uuid(UUID.randomUUID())
                 .errors(Collections.singletonList(new Error(HttpStatus.BAD_REQUEST, ex.getMessage())))
                 .build();
 
-        return new ResponseEntity<>(errorResponseResponse, HttpStatus.BAD_REQUEST);
+        return new ResponseEntity<>(errorResponse, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(EmailAlreadyExistsException.class)
     public ResponseEntity<ErrorResponse> handleException(EmailAlreadyExistsException ex) {
-        var errorResponseResponse = ErrorResponse.builder()
+        var errorResponse = ErrorResponse.builder()
                 .uuid(UUID.randomUUID())
                 .errors(Collections.singletonList(new Error(HttpStatus.SEE_OTHER, ex.getMessage())))
                 .build();
 
-        return new ResponseEntity<>(errorResponseResponse, HttpStatus.SEE_OTHER);
+        return new ResponseEntity<>(errorResponse, HttpStatus.SEE_OTHER);
     }
 
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<ErrorResponse> handleException(Exception ex) {
-        var errorResponseResponse = ErrorResponse.builder()
+        var errorResponse = ErrorResponse.builder()
                 .uuid(UUID.randomUUID())
                 .errors(Collections.singletonList(new Error(ex.getCause(), ex.getMessage())))
                 .build();
 
-        return new ResponseEntity<>(errorResponseResponse, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(errorResponse, HttpStatus.UNAUTHORIZED);
+    }
+
+    @ExceptionHandler(ResponseWithSuccessCode.class)
+    public ResponseEntity<SuccessResponse> handleException(ResponseWithSuccessCode ex) {
+        var successResponse = SuccessResponse.builder()
+                .uuid(UUID.randomUUID())
+                .successCode(ex.getCode())
+                .message(ex.getMessage())
+                .build();
+
+        return new ResponseEntity<>(successResponse, HttpStatus.valueOf(ex.getCode()));
     }
 
     @ExceptionHandler(ResourceNotFoundException.class)
     public ResponseEntity<ErrorResponse> handleException(ResourceNotFoundException ex) {
-        var errorResponseResponse = ErrorResponse.builder()
+        var errorResponse = ErrorResponse.builder()
                 .uuid(UUID.randomUUID())
                 .errors(Collections.singletonList(new Error(HttpStatus.NOT_FOUND, ex.getMessage())))
                 .build();
 
-        return new ResponseEntity<>(errorResponseResponse, HttpStatus.NOT_FOUND);
+        return new ResponseEntity<>(errorResponse, HttpStatus.NOT_FOUND);
     }
 
     @ExceptionHandler(MethodArgumentNotValidException.class)

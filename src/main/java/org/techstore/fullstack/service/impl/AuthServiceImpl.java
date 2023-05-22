@@ -1,10 +1,12 @@
 package org.techstore.fullstack.service.impl;
 
+import jakarta.mail.MessagingException;
 import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.SneakyThrows;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.cache.annotation.Cacheable;
+import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
@@ -13,13 +15,15 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.techstore.fullstack.exception.EmailAlreadyExistsException;
 import org.techstore.fullstack.exception.ResourceNotFoundException;
+import org.techstore.fullstack.exception.ResponseWithSuccessCode;
+import org.techstore.fullstack.exception.RunTimeExceptionPlaceholder;
 import org.techstore.fullstack.model.Customer;
-import org.techstore.fullstack.model.JwtToken;
 import org.techstore.fullstack.model.common.Role;
 import org.techstore.fullstack.repository.CustomerRepository;
-import org.techstore.fullstack.repository.JwtTokenRepository;
 import org.techstore.fullstack.service.AuthService;
-import org.techstore.fullstack.util.JwtUtil;
+import org.techstore.fullstack.service.JwtTokenService;
+import org.techstore.fullstack.util.EmailSender;
+import org.techstore.fullstack.util.JwtTokenizer;
 import org.techstore.fullstack.web.request.SignInRequest;
 import org.techstore.fullstack.web.request.SignUpRequest;
 import org.techstore.fullstack.web.response.SignInResponse;
@@ -36,9 +40,13 @@ public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
     private final CustomerRepository customerRepository;
-    private final JwtTokenRepository tokenRepository;
+
+    private final JwtTokenService jwtTokenService;
+    private final JwtTokenizer tokenizer;
+
+
     private final PasswordEncoder encoder;
-    private final JwtUtil jwtUtil;
+    private final EmailSender emailSender;
 
     @Override
     public SignUpResponse register(@NonNull SignUpRequest request) {
@@ -47,7 +55,6 @@ public class AuthServiceImpl implements AuthService {
         if (emailExists) {
             throw new EmailAlreadyExistsException("Your email already taken !!!");
         }
-        LocalDateTime now = LocalDateTime.now();
 
         Customer customer = Customer.builder()
                 .name(request.getName())
@@ -56,17 +63,12 @@ public class AuthServiceImpl implements AuthService {
                 .role(Role.CUSTOMER)
                 .build();
 
+        customer.setCreatedAt(LocalDateTime.now());
         customerRepository.save(customer);
 
-        String token = jwtUtil.generateToken(customer);
-        JwtToken jwtToken = JwtToken.builder()
-                .token(token)
-                .customer(customer)
-                .createdAt(now)
-                .expiredAt(now.plusMinutes(30))
-                .build();
-
-        tokenRepository.save(jwtToken);
+        String token = tokenizer.generateToken(customer);
+        jwtTokenService.saveToken(customer, token);
+        sendingConfirmEmail(customer.getEmail(), token);
 
         return SignUpResponse.builder()
                 .userId(customer.getId())
@@ -77,11 +79,24 @@ public class AuthServiceImpl implements AuthService {
 
     @Override
     public void confirmAccount(String token) {
-        log.info("TODO: SEND EMAIL");
+        boolean confirmed = jwtTokenService.isTokenConfirm(token);
+
+        if (confirmed) {
+            throw new ResponseWithSuccessCode(HttpStatus.CONTINUE.value(), "Email is confirmed");
+        }
+
+        jwtTokenService.verificationToken(token);
+        String email = tokenizer.getEmailFromToken(token);
+        Optional<Customer> byEmail = customerRepository.findByEmail(email);
+        if (byEmail.isPresent()) {
+            Customer customer = byEmail.get();
+            customer.setVerification(true);
+            customerRepository.save(customer);
+        }
     }
 
     @Override
-    @SneakyThrows
+    @Cacheable("login")
     public SignInResponse login(@NonNull SignInRequest request) {
         Optional<Customer> foundAccount = customerRepository.findByEmail(request.getEmail());
         Customer customer = foundAccount.orElseThrow(() -> new ResourceNotFoundException("Account not found"));
@@ -93,8 +108,18 @@ public class AuthServiceImpl implements AuthService {
                 )
         );
 
-        String accessToken = jwtUtil.generateToken(customer);
+        String accessToken = tokenizer.generateToken(customer);
         SecurityContextHolder.getContext().setAuthentication(authentication);
         return new SignInResponse(accessToken, customer.isVerification());
+    }
+
+    @Override
+    public void sendingConfirmEmail(String email, String token) {
+        try {
+            emailSender.send(email, token);
+        } catch (MessagingException e) {
+            log.error(e.getMessage(), e);
+            throw new RunTimeExceptionPlaceholder("Error while email sending");
+        }
     }
 }

@@ -19,10 +19,19 @@ public class AuthController {
 
     private final AuthService authService;
 
-    @GetMapping(path = "/register/confirm")
+    @GetMapping(path = "/registration/confirm")
     public AuthenticateResponse confirmAccount(@RequestParam("token") String token) {
         authService.confirmAccount(token);
         return new AuthenticateResponse(token, "Account confirmed");
+    }
+
+    @PostMapping("/registration/reconfirm")
+    public String reConfirmAccount(
+            @RequestParam("email") String email,
+            @RequestParam("token") String token
+    ) {
+        authService.sendingConfirmEmail(email, token);
+        return token;
     }
 
     @PostMapping("/sign-up")
