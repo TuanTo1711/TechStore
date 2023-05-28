@@ -5,10 +5,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.view.RedirectView;
 import org.techstore.fullstack.service.AuthService;
 import org.techstore.fullstack.web.request.SignInRequest;
 import org.techstore.fullstack.web.request.SignUpRequest;
-import org.techstore.fullstack.web.response.AuthenticateResponse;
 import org.techstore.fullstack.web.response.SignInResponse;
 import org.techstore.fullstack.web.response.SignUpResponse;
 
@@ -20,9 +20,9 @@ public class AuthController {
     private final AuthService authService;
 
     @GetMapping(path = "/registration/confirm")
-    public AuthenticateResponse confirmAccount(@RequestParam("token") String token) {
+    public RedirectView confirmAccount(@RequestParam("token") String token) {
         authService.confirmAccount(token);
-        return new AuthenticateResponse(token, "Account confirmed");
+        return new RedirectView("http://localhost:3000");
     }
 
     @PostMapping("/registration/reconfirm")

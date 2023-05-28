@@ -7,10 +7,12 @@ import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
-public class SignUpRequest {
+public class SignUpRequest implements Serializable {
 
     @NotBlank
     @Email(
@@ -22,7 +24,7 @@ public class SignUpRequest {
     @NotBlank
     @Size(max = 40, message = "Name length should not be greater than 40 characters")
     private String name;
-    
+
     @NotBlank
     @Size(min = 6, max = 20, message = "password length should be between 6 and 20 characters")
     private String password;

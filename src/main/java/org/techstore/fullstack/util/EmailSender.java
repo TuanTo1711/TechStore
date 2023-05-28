@@ -1,5 +1,6 @@
 package org.techstore.fullstack.util;
 
+import jakarta.annotation.PostConstruct;
 import jakarta.mail.MessagingException;
 import jakarta.mail.internet.MimeMessage;
 import lombok.RequiredArgsConstructor;
@@ -17,19 +18,27 @@ import java.nio.charset.StandardCharsets;
 @RequiredArgsConstructor
 public class EmailSender {
 
-    private static final int PORT = 4001;
-    private static final String BASE_URL_REDIRECT
-            = "http://localhost:%d/api/v1/auth/registration/confirm?token=".formatted(PORT);
+
     private final JavaMailSender mailSender;
     private final TemplateEngine templateEngine;
 
     @Value("${spring.mail.username}")
     private String senderEmail;
 
+    @Value("${server.port}")
+    private int port;
+    private String urlRedirect;
+
+
+    @PostConstruct
+    private void init() {
+        urlRedirect = "http://localhost:%d/api/v1/auth/registration/confirm?token=".formatted(port);
+    }
+
     @Async
     public void send(String toEmail, String token) throws MessagingException {
         MimeMessage message = mailSender.createMimeMessage();
-        MimeMessageHelper helper = new MimeMessageHelper(
+        var helper = new MimeMessageHelper(
                 message,
                 MimeMessageHelper.MULTIPART_MODE_MIXED_RELATED,
                 StandardCharsets.UTF_8.name()
@@ -37,7 +46,7 @@ public class EmailSender {
 
         // Load template and set variables
         Context context = new Context();
-        context.setVariable("link", BASE_URL_REDIRECT + token);
+        context.setVariable("link", urlRedirect + token);
 
         // Generate HTML toEmail content from the template
         String htmlContent = templateEngine.process("verification", context);

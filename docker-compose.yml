@@ -12,6 +12,8 @@ services:
     hostname: tech-store
     ports:
       - "4001:4001"
+    volumes:
+      - app-volume:/usr/app/tech-store
     networks:
       - app-network
     environment:
@@ -27,7 +29,7 @@ services:
       - "1080:1080"
       - "1025:1025"
     networks:
-      - mail-network
+      - app-network
 
   mssql:
     image: mcr.microsoft.com/mssql/server:2022-latest
@@ -43,11 +45,8 @@ services:
     networks:
       - app-network
 volumes:
+  app-volume:
   tech_store_db_volume:
-  
-  app_volume:
 networks:
   app-network:
-    driver: bridge
-  mail-network:
     driver: bridge

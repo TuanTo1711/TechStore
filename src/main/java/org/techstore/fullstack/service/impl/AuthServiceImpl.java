@@ -1,10 +1,8 @@
 package org.techstore.fullstack.service.impl;
 
 import jakarta.mail.MessagingException;
-import jakarta.transaction.Transactional;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -32,10 +30,8 @@ import org.techstore.fullstack.web.response.SignUpResponse;
 import java.time.LocalDateTime;
 import java.util.Optional;
 
-@Transactional
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class AuthServiceImpl implements AuthService {
 
     private final AuthenticationManager authenticationManager;
@@ -52,9 +48,8 @@ public class AuthServiceImpl implements AuthService {
     public SignUpResponse register(@NonNull SignUpRequest request) {
         boolean emailExists = customerRepository.existsByEmail(request.getEmail());
 
-        if (emailExists) {
+        if (emailExists)
             throw new EmailAlreadyExistsException("Your email already taken !!!");
-        }
 
         Customer customer = Customer.builder()
                 .name(request.getName())
@@ -81,9 +76,11 @@ public class AuthServiceImpl implements AuthService {
     public void confirmAccount(String token) {
         boolean confirmed = jwtTokenService.isTokenConfirm(token);
 
-        if (confirmed) {
-            throw new ResponseWithSuccessCode(HttpStatus.CONTINUE.value(), "Email is confirmed");
-        }
+        if (confirmed)
+            throw new ResponseWithSuccessCode(
+                    HttpStatus.CONTINUE.value(),
+                    "Email is confirmed"
+            );
 
         jwtTokenService.verificationToken(token);
         String email = tokenizer.getEmailFromToken(token);
@@ -110,7 +107,12 @@ public class AuthServiceImpl implements AuthService {
 
         String accessToken = tokenizer.generateToken(customer);
         SecurityContextHolder.getContext().setAuthentication(authentication);
-        return new SignInResponse(accessToken, customer.isVerification());
+        return SignInResponse.builder()
+                .accessToken(accessToken)
+                .email(customer.getEmail())
+                .name(customer.getName())
+                .enabled(customer.isEnabled())
+                .build();
     }
 
     @Override
@@ -118,7 +120,6 @@ public class AuthServiceImpl implements AuthService {
         try {
             emailSender.send(email, token);
         } catch (MessagingException e) {
-            log.error(e.getMessage(), e);
             throw new RunTimeExceptionPlaceholder("Error while email sending");
         }
     }

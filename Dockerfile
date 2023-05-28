@@ -2,8 +2,6 @@ FROM openjdk:19-jdk
 
 COPY target/TechStore-0.0.1.jar tech-store.jar
 
-VOLUME /temp
-
 #Using Dokerize to check whether db is up, if it is then start this service.
 COPY dockerize dockerize
 
