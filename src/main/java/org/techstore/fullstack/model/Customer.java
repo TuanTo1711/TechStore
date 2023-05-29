@@ -8,7 +8,6 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.techstore.fullstack.model.common.DateAudit;
-import org.techstore.fullstack.model.common.Role;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -58,14 +57,9 @@ public class Customer extends DateAudit implements UserDetails, Serializable {
     @Column(name = "VERIFICATION")
     private boolean verification;
 
-    @Column(name = "ROLE")
-    @Nationalized
-    @Enumerated(EnumType.STRING)
-    private Role role;
-
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
-        SimpleGrantedAuthority authority = new SimpleGrantedAuthority(role.name());
+        SimpleGrantedAuthority authority = new SimpleGrantedAuthority("CUSTOMER");
         return Collections.singletonList(authority);
     }
 

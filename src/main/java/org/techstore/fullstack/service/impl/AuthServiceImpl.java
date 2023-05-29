@@ -16,7 +16,6 @@ import org.techstore.fullstack.exception.ResourceNotFoundException;
 import org.techstore.fullstack.exception.ResponseWithSuccessCode;
 import org.techstore.fullstack.exception.RunTimeExceptionPlaceholder;
 import org.techstore.fullstack.model.Customer;
-import org.techstore.fullstack.model.common.Role;
 import org.techstore.fullstack.repository.CustomerRepository;
 import org.techstore.fullstack.service.AuthService;
 import org.techstore.fullstack.service.JwtTokenService;
@@ -55,7 +54,6 @@ public class AuthServiceImpl implements AuthService {
                 .name(request.getName())
                 .email(request.getEmail())
                 .password(encoder.encode(request.getPassword()))
-                .role(Role.CUSTOMER)
                 .build();
 
         customer.setCreatedAt(LocalDateTime.now());
