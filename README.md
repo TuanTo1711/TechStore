@@ -3,7 +3,7 @@ This is a [spring-boot-app](https://spring.io/) project bootstrapped with [`Spri
 
 
 # How to run
-  - Clone this repo to your device ```bash git clone https://github.com/TuanTo1711/TechStore.git ```
+  - Clone this repo to your device ```git clone https://github.com/TuanTo1711/TechStore.git ```
   - Requirement: [Docker](https://www.docker.com/get-started/)
   - You have a few options:
    * you don't have do anything else
