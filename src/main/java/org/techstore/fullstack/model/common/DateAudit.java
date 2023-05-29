@@ -1,25 +1,25 @@
-package org.techstore.fullstack.model;
+package org.techstore.fullstack.model.common;
 
-import jakarta.persistence.*;
+import jakarta.persistence.Column;
+import jakarta.persistence.MappedSuperclass;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.LastModifiedDate;
-import org.springframework.data.jpa.domain.support.AuditingEntityListener;
 
-import java.time.Instant;
 import java.time.LocalDateTime;
 
-@MappedSuperclass
-@EntityListeners(AuditingEntityListener.class)
 @Getter
 @Setter
+@MappedSuperclass
 public abstract class DateAudit {
+
     @CreatedDate
-    @Column(name = "create_at")
-    private LocalDateTime createAt;
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createdAt;
+
 
     @LastModifiedDate
-    @Column(name = "update_at")
-    private LocalDateTime updateAt;
+    @Column(name = "UPDATED_AT")
+    private LocalDateTime updatedAt;
 }

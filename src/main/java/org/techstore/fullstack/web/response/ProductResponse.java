@@ -17,6 +17,6 @@ public class ProductResponse {
     private String name;
     private String description;
     private BigDecimal price;
-//    private Set<CategoryResponse> categoryResponse;
+    private Set<CategoryResponse> categoryResponse;
 
 }

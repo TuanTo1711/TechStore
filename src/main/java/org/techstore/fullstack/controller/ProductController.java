@@ -4,6 +4,10 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.techstore.fullstack.Projection.CategorySlim;
+import org.techstore.fullstack.Projection.ProductWithData;
+import org.techstore.fullstack.repository.CategoryRepository;
+import org.techstore.fullstack.repository.ProductRepository;
 import org.techstore.fullstack.service.ProductService;
 import org.techstore.fullstack.web.request.ProductRequest;
 import org.techstore.fullstack.web.response.ProductResponse;
@@ -15,6 +19,8 @@ import java.util.List;
 @RequiredArgsConstructor
 public class ProductController {
     private final ProductService productService;
+    private final CategoryRepository categoryRepository;
+    private final ProductRepository productRepository;
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
@@ -46,6 +52,21 @@ public class ProductController {
     public ResponseEntity<String> deleteProduct(@PathVariable Long id) {
         productService.deleteProduct(id);
         return ResponseEntity.ok("Product deleted successfully");
+    }
+
+    @GetMapping("/ProductWithCategory")
+    public List<CategorySlim> getCategoryProduct(){
+        return categoryRepository.findBy(CategorySlim.class);
+    }
+
+    @GetMapping("ProductWith/{id}")
+    public ProductWithData getIdProduct(@PathVariable Integer id){
+        return productRepository.findById(id, ProductWithData.class);
+    }
+
+    @GetMapping("Category/{id}")
+    public List<CategorySlim> getIdCategory(@PathVariable Integer id) {
+        return categoryRepository.findById(id, CategorySlim.class);
     }
 
 }

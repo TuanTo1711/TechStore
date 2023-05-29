@@ -17,5 +17,5 @@ public class ProductRequest {
     private String name;
     private String description;
     private BigDecimal price;
-//    private Set<CategoryRequest> categoryRequests;
+    private Set<CategoryRequest> categoryRequests;
 }

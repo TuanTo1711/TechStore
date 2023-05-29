@@ -12,4 +12,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p WHERE p.name LIKE :name")
     List<Product> searchProductByName(@Param("name")String name);
 
+
+
+    <T> T findById(Integer id, Class<T> type);
 }

@@ -23,7 +23,6 @@ public class ProductService {
                 .name(productRequest.getName())
                 .description(productRequest.getDescription())
                 .price(productRequest.getPrice()).build();
-
         productRepository.save(product);
         log.info("Product {} is save " , product.getName() );
     }
@@ -40,6 +39,7 @@ public class ProductService {
                 .name(product.getName())
                 .description(product.getDescription())
                 .price(product.getPrice())
+//                .categoryResponse(product.getCategory())
                 .build();
     }
 
@@ -75,7 +75,8 @@ public class ProductService {
         if (foundProduct.isPresent()) {
             productRepository.delete(foundProduct.get());
             log.info("Product {} is deleted", foundProduct.get().getName());
-        } else {
+        } else
+        {
             log.error("Product not found");
             throw new IllegalArgumentException("Product not found");
         }
