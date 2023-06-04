@@ -2,13 +2,14 @@ package org.techstore.fullstack.model;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Size;
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
+import org.hibernate.annotations.JoinColumnOrFormula;
 import org.hibernate.annotations.Nationalized;
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
 import org.techstore.fullstack.model.common.DateAudit;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.util.LinkedHashSet;
 import java.util.Set;
@@ -16,8 +17,12 @@ import java.util.Set;
 @Getter
 @Setter
 @Entity
+@AllArgsConstructor
+@NoArgsConstructor
+@Builder
+
 @Table(name = "PRODUCTS", schema = "dbo")
-public class Product extends DateAudit {
+public class Product  extends DateAudit  {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "PRODUCT_ID", nullable = false)

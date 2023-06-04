@@ -9,7 +9,7 @@ public interface AuthService {
 
     SignUpResponse register(SignUpRequest request);
 
-    void confirmAccount(String token);
+    void  confirmAccount(String token);
 
     SignInResponse login(SignInRequest request);
 

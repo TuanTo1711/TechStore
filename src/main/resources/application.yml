@@ -29,9 +29,7 @@ spring:
     cache: false
 jwt:
   secret: 51665468576D5A7134743777217A25432A462D4A614E645267556B586E327235
-
 ---
-
 spring:
   config:
     activate:

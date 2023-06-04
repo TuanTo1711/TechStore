@@ -15,10 +15,10 @@ import org.techstore.fullstack.web.response.SignUpResponse;
 @RestController
 @RequestMapping(path = "/api/v1/auth")
 @RequiredArgsConstructor
+
 public class AuthController {
 
     private final AuthService authService;
-
     @GetMapping(path = "/registration/confirm")
     public RedirectView confirmAccount(@RequestParam("token") String token) {
         authService.confirmAccount(token);
@@ -45,4 +45,5 @@ public class AuthController {
         SignInResponse signInResponse = authService.login(request);
         return ResponseEntity.ok(signInResponse);
     }
+
 }
