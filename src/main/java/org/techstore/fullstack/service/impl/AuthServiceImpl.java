@@ -3,7 +3,6 @@ package org.techstore.fullstack.service.impl;
 import jakarta.mail.MessagingException;
 import lombok.NonNull;
 import lombok.RequiredArgsConstructor;
-import org.springframework.cache.annotation.Cacheable;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -38,7 +37,6 @@ public class AuthServiceImpl implements AuthService {
 
     private final JwtTokenService jwtTokenService;
     private final JwtTokenizer tokenizer;
-
 
     private final PasswordEncoder encoder;
     private final EmailSender emailSender;
@@ -91,7 +89,6 @@ public class AuthServiceImpl implements AuthService {
     }
 
     @Override
-    @Cacheable("login")
     public SignInResponse login(@NonNull SignInRequest request) {
         Optional<Customer> foundAccount = customerRepository.findByEmail(request.getEmail());
         Customer customer = foundAccount.orElseThrow(() -> new ResourceNotFoundException("Account not found"));

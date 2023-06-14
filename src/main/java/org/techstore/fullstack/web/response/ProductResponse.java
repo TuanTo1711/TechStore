@@ -11,16 +11,22 @@ import java.math.BigDecimal;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class GetProductsResponse {
+public class ProductResponse {
     private Integer id;
 
-    private String productName;
+    private String name;
+
+    private String thumbnail;
 
     private String description;
 
     private BigDecimal price;
 
-    private String categoryName;
+    private String category;
 
     private String brand;
+
+    private Integer rating;
+
+    private Double averageRating;
 }

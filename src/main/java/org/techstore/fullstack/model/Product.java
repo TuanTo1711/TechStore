@@ -28,6 +28,10 @@ public class Product extends DateAudit {
     @Column(name = "NAME")
     private String name;
 
+    @Column(name = "THUMBNAIL")
+    @Nationalized
+    private String thumbnail;
+
     @Nationalized
     @Lob
     @Column(name = "DESCRIPTION")
@@ -44,6 +48,6 @@ public class Product extends DateAudit {
     @OneToMany(mappedBy = "product")
     private Set<OrderItem> orderItems = new LinkedHashSet<>();
 
-    @OneToMany(mappedBy = "product")
+    @OneToMany(mappedBy = "product", fetch = FetchType.LAZY)
     private Set<Review> reviews = new LinkedHashSet<>();
 }

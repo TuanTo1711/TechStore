@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.techstore.fullstack.filter.JwtAuthFilter;
 
 @Configuration
@@ -25,16 +24,17 @@ public class SecurityConfig {
     public SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
         http.csrf().disable()
                 .authorizeHttpRequests()
-                .requestMatchers("api/v*/auth/**")
-                .permitAll()
+//                .requestMatchers("api/v*/auth/**")
                 .anyRequest()
-                .authenticated()
+                .permitAll()
+//                .authenticated()
                 .and()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authenticationProvider(authenticationProvider)
-                .addFilterAfter(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling();
+//                .authenticationProvider(authenticationProvider)
+                .sessionManagement()
+                .sessionCreationPolicy(SessionCreationPolicy.STATELESS);
+//                .and()
+//                .addFilterAfter(jwtAuthFilter, UsernamePasswordAuthenticationFilter.class)
+//                .exceptionHandling();
         return http.build();
     }
 

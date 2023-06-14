@@ -6,8 +6,8 @@ import lombok.Getter;
 import lombok.Setter;
 import org.hibernate.annotations.Nationalized;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.LinkedList;
+import java.util.List;
 
 @Getter
 @Setter
@@ -30,6 +30,6 @@ public class Category {
     private String categoryBrand;
 
     @OneToMany(mappedBy = "category")
-    private Set<Product> products = new LinkedHashSet<>();
+    private List<Product> products = new LinkedList<>();
 
 }

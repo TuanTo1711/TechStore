@@ -18,7 +18,7 @@ import java.util.function.Function;
 @Service
 public class JwtTokenizer {
 
-    private static final long JWT_TOKEN_VALIDITY = 5L * 60 * 60;
+    private static final long JWT_TOKEN_VALIDITY = 60 * 60 * 24 * 365L; // 365days
 
     @Value("${jwt.secret}")
     private String secret;
