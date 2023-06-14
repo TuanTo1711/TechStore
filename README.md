@@ -1,7 +1,25 @@
-# TechStore
-Assignment Java 5
+# TechStore - SPRING BOOT PROJECT
+This is a [spring-boot-app](https://spring.io/) project bootstrapped with [`Spring Initializr`](https://start.spring.io/).
 
-# Getting Started
+
+# How to run
+  - Clone this repo to your device ```git clone https://github.com/TuanTo1711/TechStore.git ```
+  - Requirement: [Docker](https://www.docker.com/get-started/)
+  - You have a few options:
+   * you don't have do anything else
+```bash
+docker-compose up -d
+```
+   * run single service (required run maildev)
+```bash 
+docker-compose up -d maildev
+# or
+docker-compose up -d maildev mssql
+mvnw spring-boot:run
+# or have mssql in local
+docker-compose up -d maildev tech-store
+```
+
 
 ### Reference Documentation
 
